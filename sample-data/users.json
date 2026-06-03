@@ -1,0 +1,38 @@
+[
+  {
+    "_id": { "$oid": "66a300000000000000000001" },
+    "firstName": "System",
+    "lastName": "Admin",
+    "email": "admin@eums.dev",
+    "password": "$2a$12$j7gOEQQOlp9y.IllxMEBeuUwu/Gb1Pji30GieEWIyuzQzaSH8P.xG",
+    "role": { "$oid": "66a200000000000000000001" },
+    "profileImage": "https://api.dicebear.com/8.x/avataaars/svg?seed=admin",
+    "isActive": true,
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a300000000000000000002" },
+    "firstName": "Ayesha",
+    "lastName": "Fernando",
+    "email": "ayesha.fernando@eums.dev",
+    "password": "$2a$12$21kI7QgRNEYFCSmvMxZ0OOrb/bnawdvfqQdf1USjADw5.niMsc7su",
+    "role": { "$oid": "66a200000000000000000002" },
+    "profileImage": "https://api.dicebear.com/8.x/avataaars/svg?seed=Ayesha",
+    "isActive": true,
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a300000000000000000003" },
+    "firstName": "Kasun",
+    "lastName": "Silva",
+    "email": "kasun.silva@eums.dev",
+    "password": "$2a$12$21kI7QgRNEYFCSmvMxZ0OOrb/bnawdvfqQdf1USjADw5.niMsc7su",
+    "role": { "$oid": "66a200000000000000000003" },
+    "profileImage": "https://api.dicebear.com/8.x/avataaars/svg?seed=Kasun",
+    "isActive": false,
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  }
+]
