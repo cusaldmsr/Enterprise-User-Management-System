@@ -1,0 +1,12 @@
+{
+  "name": "eums-root",
+  "version": "1.0.0",
+  "description": "Enterprise User Management System – Monorepo root",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  }
+}
