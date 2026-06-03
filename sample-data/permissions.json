@@ -1,0 +1,51 @@
+[
+  {
+    "_id": { "$oid": "66a100000000000000000001" },
+    "name": "VIEW_USERS",
+    "description": "View users list and profiles",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a100000000000000000002" },
+    "name": "CREATE_USER",
+    "description": "Create new user accounts",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a100000000000000000003" },
+    "name": "EDIT_USER",
+    "description": "Edit existing user accounts",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a100000000000000000004" },
+    "name": "DELETE_USER",
+    "description": "Delete user accounts",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a100000000000000000005" },
+    "name": "UPLOAD_FILES",
+    "description": "Upload profile images and documents",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a100000000000000000006" },
+    "name": "VIEW_DASHBOARD",
+    "description": "Access dashboard analytics and audit logs",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a100000000000000000007" },
+    "name": "SEARCH_USERS",
+    "description": "Search and filter users",
+    "createdAt": { "$date": "2026-06-03T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T00:00:00.000Z" }
+  }
+]
