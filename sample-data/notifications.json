@@ -1,0 +1,29 @@
+[
+  {
+    "_id": { "$oid": "66a400000000000000000001" },
+    "userId": { "$oid": "66a300000000000000000001" },
+    "title": "Welcome to the system",
+    "message": "Your admin account has been created successfully.",
+    "isRead": false,
+    "createdAt": { "$date": "2026-06-03T08:20:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T08:20:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a400000000000000000002" },
+    "userId": { "$oid": "66a300000000000000000002" },
+    "title": "New user registered",
+    "message": "A new user account has been created and is awaiting review.",
+    "isRead": true,
+    "createdAt": { "$date": "2026-06-03T09:05:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T09:10:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "66a400000000000000000003" },
+    "userId": { "$oid": "66a300000000000000000003" },
+    "title": "Password reset reminder",
+    "message": "Please update your password to keep your account secure.",
+    "isRead": false,
+    "createdAt": { "$date": "2026-06-03T09:30:00.000Z" },
+    "updatedAt": { "$date": "2026-06-03T09:30:00.000Z" }
+  }
+]
