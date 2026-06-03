@@ -7,9 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Skeleton } from '../components/ui/skeleton';
-import { Progress } from '../components/ui/progress';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { Separator } from '../components/ui/separator';
 
 const ACTION_COLORS: Record<string, { dot: string; badge: 'success' | 'muted' | 'indigo' | 'warning' | 'destructive' | 'violet' | 'cyan' }> = {
   LOGIN:           { dot: 'bg-emerald-400',  badge: 'success' },
@@ -131,7 +129,7 @@ export default function DashboardPage() {
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full transition-all duration-700 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400"
+                  className="h-full transition-all duration-700 rounded-full bg-linear-to-r from-emerald-500 to-cyan-400"
                   style={{ width: `${activeRate}%` }}
                 />
               </div>
@@ -170,7 +168,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="h-1.5 rounded-full bg-muted overflow-hidden">
                   <div
-                    className={`h-full rounded-full bg-gradient-to-r ${progressColor} transition-all duration-700`}
+                    className={`h-full rounded-full bg-linear-to-r ${progressColor} transition-all duration-700`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
