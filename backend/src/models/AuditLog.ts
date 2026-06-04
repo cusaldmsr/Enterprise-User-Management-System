@@ -52,6 +52,7 @@ const AuditLogSchema = new Schema<IAuditLog>(
     timestamp: {
       type: Date,
       default: Date.now,
+      index: true, // B-Tree index: converts O(N) scan to O(log N) lookup on time-range queries
     },
   },
   { timestamps: false }

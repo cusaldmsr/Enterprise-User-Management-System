@@ -32,6 +32,7 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: true,
       unique: true,
+      index: true, // B-Tree index: converts O(N) scan to O(log N) lookup
       lowercase: true,
       trim: true,
     },

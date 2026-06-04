@@ -6,6 +6,7 @@ import { useAuthStore } from "../../store/authStore";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { HelpdeskWidget } from "../ui/HelpdeskWidget";
 
 // Minimal page metadata map (keeps layout typesafe)
 const pageMeta: Record<string, { title: string; subtitle?: string }> = {
@@ -56,6 +57,9 @@ export function AppLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Helpdesk Widget — floats over all authenticated pages */}
+      <HelpdeskWidget />
     </div>
   );
 }
