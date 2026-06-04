@@ -49,11 +49,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
 
-  // Set refresh token in httpOnly cookie
+  // Set refresh token in HttpOnly, Secure, SameSite=Strict cookie
+  // – HttpOnly: prevents JS access (XSS mitigation)
+  // – Secure: HTTPS-only in production (eavesdropping mitigation)
+  // – SameSite=Strict: blocks cross-site request forgery (CSRF mitigation)
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
