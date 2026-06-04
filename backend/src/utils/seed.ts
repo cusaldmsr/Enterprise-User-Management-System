@@ -1,116 +1,145 @@
+/**
+ * DummyJSON Dynamic Data Seeder
+ * ─────────────────────────────
+ * Fetches real mock user data from https://dummyjson.com/users and transforms
+ * it to match Mongoose schemas using the Table 2 mapping policy:
+ *
+ *  DummyJSON field │ Mongoose field  │ Transform
+ *  ─────────────────┼─────────────────┼───────────────────────────────────
+ *  firstName        │ firstName       │ direct
+ *  lastName         │ lastName        │ direct
+ *  email            │ email           │ .toLowerCase()
+ *  image            │ profileImage    │ direct URL string
+ *  password         │ password        │ direct (bcrypt hashes on pre-save)
+ *  index 0          │ role            │ ADMIN
+ *  index 1–4        │ role            │ MANAGER
+ *  index 5+         │ role            │ USER
+ *
+ * Behaviour: ALWAYS replaces existing seeded users (wipe + re-seed).
+ *
+ * Usage (standalone):
+ *   npx ts-node src/utils/seed.ts
+ *
+ * Usage (via API – admin only):
+ *   POST /api/seed
+ */
+
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import Permission from '../models/Permission';
-import Role from '../models/Role';
+import connectDB from '../config/db';
 import User from '../models/User';
-
-const PERMISSIONS = [
-  { name: 'VIEW_USERS', description: 'View users list and profiles' },
-  { name: 'CREATE_USER', description: 'Create new user accounts' },
-  { name: 'EDIT_USER', description: 'Edit existing user accounts' },
-  { name: 'DELETE_USER', description: 'Delete user accounts' },
-  { name: 'UPLOAD_FILES', description: 'Upload profile images and documents' },
-  { name: 'VIEW_DASHBOARD', description: 'Access dashboard analytics and audit logs' },
-  { name: 'SEARCH_USERS', description: 'Search and filter users' },
-];
-
-const ROLES: Record<string, string[]> = {
-  ADMIN: ['VIEW_USERS', 'CREATE_USER', 'EDIT_USER', 'DELETE_USER', 'UPLOAD_FILES', 'VIEW_DASHBOARD', 'SEARCH_USERS'],
-  MANAGER: ['VIEW_USERS', 'EDIT_USER', 'UPLOAD_FILES', 'SEARCH_USERS'],
-  USER: ['VIEW_USERS', 'SEARCH_USERS'],
-};
+import Role from '../models/Role';
+import Permission from '../models/Permission';
 
 interface DummyUser {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
   image: string;
+  password: string;
 }
 
-const seed = async () => {
-  await mongoose.connect(process.env.MONGODB_URI as string);
-  console.log('✅ Connected to MongoDB');
+interface DummyJSONResponse {
+  users: DummyUser[];
+  total: number;
+  skip: number;
+  limit: number;
+}
 
-  // Clear existing data
-  await Permission.deleteMany({});
-  await Role.deleteMany({});
-  await User.deleteMany({});
-  console.log('🗑️  Cleared existing data');
-
-  // Create permissions
-  const permDocs = await Permission.insertMany(PERMISSIONS);
-  const permMap = new Map(permDocs.map((p) => [p.name, p._id]));
-  console.log(`✅ Created ${permDocs.length} permissions`);
-
-  // Create roles
-  const roleMap = new Map<string, mongoose.Types.ObjectId>();
-  for (const [roleName, perms] of Object.entries(ROLES)) {
-    const role = await Role.create({
-      name: roleName,
-      permissions: perms.map((p) => permMap.get(p)),
-    });
-    roleMap.set(roleName, role._id as mongoose.Types.ObjectId);
-  }
-  console.log('✅ Created 3 roles: ADMIN, MANAGER, USER');
-
-  // Fetch users from DummyJSON
-  console.log('📡 Fetching users from DummyJSON...');
-  let dummyUsers: DummyUser[] = [];
-  try {
-    const response = await fetch('https://dummyjson.com/users?limit=30&skip=0');
-    const data = await response.json() as { users: DummyUser[] };
-    dummyUsers = data.users;
-    console.log(`✅ Fetched ${dummyUsers.length} users`);
-  } catch (e) {
-    console.warn('⚠️  Could not fetch DummyJSON users, using fallback data');
-    dummyUsers = [
-      { firstName: 'John', lastName: 'Doe', email: 'john.doe@eums.dev', image: '' },
-      { firstName: 'Jane', lastName: 'Smith', email: 'jane.smith@eums.dev', image: '' },
-    ];
-  }
-
-  // Create admin user
-  await User.create({
-    firstName: 'System',
-    lastName: 'Admin',
-    email: 'admin@eums.dev',
-    password: 'Admin@1234',
-    role: roleMap.get('ADMIN'),
-    profileImage: 'https://api.dicebear.com/8.x/avataaars/svg?seed=admin',
-    isActive: true,
-  });
-  console.log('✅ Admin user created: admin@eums.dev / Admin@1234');
-
-  // Assign roles in a 2:3:5 ratio (Admin:Manager:User)
-  const roleAssignment = (i: number): string => {
-    if (i % 10 < 2) return 'ADMIN';
-    if (i % 10 < 5) return 'MANAGER';
-    return 'USER';
-  };
-
-  const usersToCreate = dummyUsers.map((u, i) => ({
-    firstName: u.firstName,
-    lastName: u.lastName,
-    email: u.email || `user${i + 1}@eums.dev`,
-    password: 'Pass@1234',
-    role: roleMap.get(roleAssignment(i)),
-    profileImage: u.image || `https://api.dicebear.com/8.x/avataaars/svg?seed=${u.firstName}`,
-    isActive: i % 7 !== 0, // some inactive
-  }));
-
-  await User.insertMany(usersToCreate);
-  console.log(`✅ Created ${usersToCreate.length} users from DummyJSON`);
-
-  console.log('\n🎉 Seeding complete!');
-  console.log('═══════════════════════════════════');
-  console.log('Admin login: admin@eums.dev');
-  console.log('Password:    Admin@1234');
-  console.log('═══════════════════════════════════\n');
-
-  await mongoose.disconnect();
+/**
+ * Assign role name based on user index (Table 2 policy):
+ *  index 0      → ADMIN
+ *  index 1–4    → MANAGER
+ *  index 5+     → USER
+ */
+const resolveRoleName = (index: number): string => {
+  if (index === 0) return 'ADMIN';
+  if (index <= 4) return 'MANAGER';
+  return 'USER';
 };
 
-seed().catch((err) => {
-  console.error('Seed failed:', err);
-  process.exit(1);
-});
+export const runSeed = async (): Promise<{ seeded: number; message: string }> => {
+  console.log('🌱 Starting DummyJSON data seed...');
+
+  // ── 1. Fetch from DummyJSON ─────────────────────────────────────────────
+  console.log('📡 Fetching users from https://dummyjson.com/users?limit=30...');
+  const response = await fetch('https://dummyjson.com/users?limit=30');
+
+  if (!response.ok) {
+    throw new Error(`DummyJSON API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = (await response.json()) as DummyJSONResponse;
+  const dummyUsers = data.users;
+  console.log(`✅ Fetched ${dummyUsers.length} users from DummyJSON`);
+
+  // ── 2. Load roles from DB ───────────────────────────────────────────────
+  const [adminRole, managerRole, userRole] = await Promise.all([
+    Role.findOne({ name: 'ADMIN' }),
+    Role.findOne({ name: 'MANAGER' }),
+    Role.findOne({ name: 'USER' }),
+  ]);
+
+  if (!adminRole || !managerRole || !userRole) {
+    throw new Error(
+      'Roles (ADMIN, MANAGER, USER) not found in DB. Please run the role initialisation first.'
+    );
+  }
+
+  const roleMap: Record<string, mongoose.Types.ObjectId> = {
+    ADMIN: adminRole._id as mongoose.Types.ObjectId,
+    MANAGER: managerRole._id as mongoose.Types.ObjectId,
+    USER: userRole._id as mongoose.Types.ObjectId,
+  };
+
+  // ── 3. Always replace — wipe existing users ────────────────────────────
+  console.log('🗑️  Clearing existing users (always-replace mode)...');
+  await User.deleteMany({});
+  console.log('✅ Existing users cleared');
+
+  // ── 4. Transform + insert using Table 2 mapping policy ─────────────────
+  const usersToInsert = dummyUsers.map((du, index) => {
+    const roleName = resolveRoleName(index);
+    return {
+      firstName: du.firstName,
+      lastName: du.lastName,
+      email: du.email.toLowerCase(), // Table 2: force to lowercase
+      password: du.password,         // bcrypt pre-save hook will hash this
+      profileImage: du.image,        // Table 2: DummyJSON `image` → `profileImage`
+      role: roleMap[roleName],
+      isActive: true,
+    };
+  });
+
+  // insertMany skips the pre-save hook for password hashing, so we create
+  // each user individually to trigger the bcrypt pre-save middleware.
+  console.log(`🔄 Creating ${usersToInsert.length} users (with bcrypt hashing)...`);
+  let seeded = 0;
+  for (const userData of usersToInsert) {
+    await User.create(userData);
+    seeded++;
+  }
+
+  const message = `✅ Seeded ${seeded} users from DummyJSON successfully`;
+  console.log(message);
+  return { seeded, message };
+};
+
+// ── Standalone execution ────────────────────────────────────────────────────
+const isStandalone = process.argv[1]?.includes('seed');
+if (isStandalone) {
+  connectDB()
+    .then(() => runSeed())
+    .then(({ message }) => {
+      console.log(message);
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('❌ Seed failed:', err.message);
+      process.exit(1);
+    });
+}
+
+// Ensure models are registered when imported from routes
+export { User, Role, Permission };
