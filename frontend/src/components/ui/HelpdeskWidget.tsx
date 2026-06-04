@@ -98,7 +98,7 @@ export function HelpdeskWidget() {
         onClick={() => setIsOpen((v) => !v)}
         className={cn(
           "fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-2xl px-4 py-3",
-          "bg-gradient-to-br from-indigo-600 to-violet-600 text-white",
+          "bg-linear-to-br from-indigo-600 to-violet-600 text-white",
           "shadow-lg shadow-indigo-500/40",
           "transition-all duration-300 ease-out",
           "hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1",
@@ -108,10 +108,10 @@ export function HelpdeskWidget() {
         )}
       >
         {isOpen ? (
-          <X className="h-5 w-5 transition-transform duration-200" />
+          <X className="w-5 h-5 transition-transform duration-200" />
         ) : (
           <>
-            <HeadphonesIcon className="h-5 w-5" />
+            <HeadphonesIcon className="w-5 h-5" />
             <span className="text-sm font-semibold">Help &amp; Support</span>
           </>
         )}
@@ -124,26 +124,26 @@ export function HelpdeskWidget() {
         aria-modal="true"
         aria-label="Helpdesk support form"
         className={cn(
-          "fixed bottom-20 right-6 z-50 w-[360px] max-w-[calc(100vw-3rem)]",
+          "fixed bottom-20 right-6 z-50 w-90 max-w-[calc(100vw-3rem)]",
           "origin-bottom-right transition-all duration-300 ease-out",
           isOpen
             ? "scale-100 opacity-100 translate-y-0 pointer-events-auto"
             : "scale-95 opacity-0 translate-y-4 pointer-events-none"
         )}
       >
-        <div className="rounded-2xl border border-border/60 bg-card shadow-2xl shadow-black/30 overflow-hidden">
+        <div className="overflow-hidden border shadow-2xl rounded-2xl border-border/60 bg-card shadow-black/30">
           {/* Header */}
-          <div className="relative bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-700 px-5 py-4 overflow-hidden">
+          <div className="relative px-5 py-4 overflow-hidden bg-linear-to-br from-indigo-600 via-indigo-700 to-violet-700">
             {/* Decorative blobs */}
-            <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-white/10 blur-xl" />
-            <div className="absolute -bottom-6 -left-4 h-16 w-16 rounded-full bg-violet-400/20 blur-xl" />
+            <div className="absolute w-20 h-20 rounded-full -top-4 -right-4 bg-white/10 blur-xl" />
+            <div className="absolute w-16 h-16 rounded-full -bottom-6 -left-4 bg-violet-400/20 blur-xl" />
 
             <div className="relative flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm ring-1 ring-white/20">
-                <MessageCircleQuestion className="h-5 w-5 text-white" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/15 backdrop-blur-sm ring-1 ring-white/20">
+                <MessageCircleQuestion className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-base font-semibold text-white leading-tight">
+                <h2 className="text-base font-semibold leading-tight text-white">
                   Helpdesk Support
                 </h2>
                 <p className="text-xs text-indigo-200">
@@ -158,7 +158,7 @@ export function HelpdeskWidget() {
             {/* ── Success state ── */}
             {status === "success" ? (
               <div className="flex flex-col items-center gap-3 py-6 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15 ring-1 ring-emerald-500/30">
+                <div className="flex items-center justify-center rounded-full h-14 w-14 bg-emerald-500/15 ring-1 ring-emerald-500/30">
                   <CheckCircle2 className="h-7 w-7 text-emerald-500" />
                 </div>
                 <div>
@@ -195,7 +195,7 @@ export function HelpdeskWidget() {
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="helpdesk-name"
-                    className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                    className="text-xs font-medium tracking-wide uppercase text-muted-foreground"
                   >
                     Name <span className="text-destructive">*</span>
                   </Label>
@@ -206,7 +206,7 @@ export function HelpdeskWidget() {
                     placeholder="Your full name"
                     required
                     disabled={status === "loading"}
-                    className="h-9 text-sm"
+                    className="text-sm h-9"
                   />
                 </div>
 
@@ -214,7 +214,7 @@ export function HelpdeskWidget() {
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="helpdesk-email"
-                    className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                    className="text-xs font-medium tracking-wide uppercase text-muted-foreground"
                   >
                     Email Address <span className="text-destructive">*</span>
                   </Label>
@@ -225,7 +225,7 @@ export function HelpdeskWidget() {
                     placeholder="you@example.com"
                     required
                     disabled={status === "loading"}
-                    className="h-9 text-sm"
+                    className="text-sm h-9"
                   />
                 </div>
 
@@ -233,7 +233,7 @@ export function HelpdeskWidget() {
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="helpdesk-message"
-                    className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                    className="text-xs font-medium tracking-wide uppercase text-muted-foreground"
                   >
                     Message <span className="text-destructive">*</span>
                   </Label>
@@ -244,7 +244,7 @@ export function HelpdeskWidget() {
                     required
                     disabled={status === "loading"}
                     rows={4}
-                    className="resize-none text-sm"
+                    className="text-sm resize-none"
                   />
                 </div>
 
@@ -258,12 +258,12 @@ export function HelpdeskWidget() {
                 >
                   {status === "loading" ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       Sending…
                     </>
                   ) : (
                     <>
-                      <Send className="h-4 w-4" />
+                      <Send className="w-4 h-4" />
                       Send Message
                     </>
                   )}
